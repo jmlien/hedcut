@@ -1,0 +1,17 @@
+syntax: glob
+**/*.o
+voronoi_stippler
+Debug/*
+Release/*
+ipch/*
+handin/*
+*.bak
+voronoi.ncb
+voronoi.opensdf
+voronoi.sdf
+voronoi.suo
+stippler/stippler.vcxproj.filters
+stippler/stippler.vcxproj.user
+voronoi/voronoi.vcxproj.filters
+voronoi/voronoi.vcxproj.user
+voronoi.v11.suo
