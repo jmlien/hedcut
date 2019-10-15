@@ -4,19 +4,10 @@
 
 Hedcut::Hedcut()
 {
-	//control flags
-	disk_size = 1;        //if uniform_disk_size is true, all disks have radius=disk_size,
-	                      //othewise, the largest disks will have their radii=disk_size
-
-	uniform_disk_size = false; //true if all disks have the same size. disk_size is used when uniform_disk_size is true.
-	black_disk = false;        //true if all disks are black ONLY
-
 	//cvt control flags
 	cvt_iteration_limit = 100; //max number of iterations when building cvf
 	max_site_displacement = 1.01f; //max tolerable site displacement in each iteration.
 	average_termination = false;
-	gpu = false;
-	subpixels = 1;
 
 	debug = false;
 }
@@ -38,18 +29,13 @@ bool Hedcut::build(cv::Mat & input_image, int n)
 	cvt.iteration_limit = this->cvt_iteration_limit;
 	cvt.max_site_displacement = this->max_site_displacement;
 	cvt.average_termination = this->average_termination;
-	cvt.gpu = this->gpu;
-	cvt.subpixels = this->subpixels;
 	cvt.debug = this->debug;
 
 	clock_t startTime, endTime;
 	startTime = clock();
 
 	//compute weighted centroidal voronoi tessellation
-	if (cvt.gpu)
-		cvt.compute_weighted_cvt_GPU(input_image, pts);
-	else
-		cvt.compute_weighted_cvt(grayscale, pts);	//*****
+	cvt.compute_weighted_cvt(grayscale, pts);	//*****
 
 	endTime = clock();
 	std::cout << "Total time: "<< ((double)(endTime - startTime)) / CLOCKS_PER_SEC << std::endl;
@@ -116,7 +102,7 @@ void Hedcut::create_disks(cv::Mat & img, CVT & cvt)
 		unsigned int r = 0, g = 0, b = 0;
 		for (auto & resizedPix : cell.coverage)
 		{
-			cv::Point pix(resizedPix.x / subpixels, resizedPix.y / subpixels);
+			cv::Point pix(resizedPix.x, resizedPix.y);
 			total += grayscale.at<uchar>(pix.x, pix.y);
 			r += img.at<cv::Vec3b>(pix.x, pix.y)[2];
 			g += img.at<cv::Vec3b>(pix.x, pix.y)[1];
@@ -131,8 +117,8 @@ void Hedcut::create_disks(cv::Mat & img, CVT & cvt)
 		HedcutDisk disk;
 		disk.center.x = cell.site.y; //x = col
 		disk.center.y = cell.site.x; //y = row
-		disk.color = (black_disk) ? cv::Scalar::all(0) : cv::Scalar(r, g, b, 0.0);
-		disk.radius = (uniform_disk_size) ? disk_size : (100 * disk_size / (avg_v + 100));
+		disk.color = cv::Scalar::all(0); //black
+		disk.radius = 1;
 
 		//remember
 		this->disks.push_back(disk);

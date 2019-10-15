@@ -1,6 +1,8 @@
 #include "wcvt.h"
 #include <iostream>
 
+std::vector<VorCell> CVT::cells;
+
 bool compareCell(const std::pair<float, cv::Point>& p1, const std::pair<float, cv::Point>& p2)
 {
 	if (p1.first == p2.first)
@@ -15,7 +17,7 @@ bool compareCell(const std::pair<float, cv::Point>& p1, const std::pair<float, c
 void CVT::vor(cv::Mat &  img)
 {
 	//Generate virtual high resolution image
-	cv::Size res(img.size().width * subpixels, img.size().height * subpixels);
+	cv::Size res(img.size().width, img.size().height);
 	cv::Mat resizedImg(res.width, res.height, cv::IMREAD_GRAYSCALE);
 	cv::resize(img, resizedImg, res, 0, 0, cv::INTER_LINEAR);
 
@@ -23,16 +25,11 @@ void CVT::vor(cv::Mat &  img)
 	cv::Mat root(res, CV_16U, cv::Scalar::all(USHRT_MAX));
 	cv::Mat visited(res, CV_8U, cv::Scalar::all(0));
 
-
 	//init
 	std::vector< std::pair<float, cv::Point> > open;
 	ushort site_id = 0;
 	for (auto& c : this->cells)
 	{
-		//Redirect input site to the position in resized Image
-		c.site.x *= subpixels;
-		c.site.y *= subpixels;
-
 		if (debug)
 		{
 			if (c.site.x<0 || c.site.x>res.height)
