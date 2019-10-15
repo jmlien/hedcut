@@ -69,13 +69,13 @@ public:
 	void compute_weighted_cvt(cv::Mat &  img, std::vector<cv::Point2d> & pts);
 	void compute_weighted_cvt_GPU(cv::Mat &  img, std::vector<cv::Point2d> & sites);
 
-	const std::vector<VorCell> & getCells() const 
+	const std::vector<VorCell> & getCells() const
 	{
 		return this->cells;
 	}
 
 	int iteration_limit;       //max number of iterations when building cvf
-	float max_site_displacement; //max tolerable site displacement in each iteration. 
+	float max_site_displacement; //max tolerable site displacement in each iteration.
 	bool average_termination;
 	bool gpu;
 	int subpixels;
@@ -84,17 +84,17 @@ public:
 
 private:
 	static std::vector<VorCell> cells;
-	
+
 	void vor(cv::Mat &  img);
-	
-	
+
+
 	//For GPU
 	void run_GPU(int argc, char**argv, cv::Mat& img);
 	void init_GPU(cv::Mat& img);
 	static void display_GPU();
 	static void vor_GPU();
 	static float move_sites_GPU();
-	
+
 	//convert a color intensity to distance between 0~1
 	inline float color2dist(cv::Mat &  img, cv::Point& p)
 	{
@@ -109,8 +109,8 @@ private:
 
 		//Generate virtual high resolution image;
 		cv::Size res(img.size().width * subpixels, img.size().height * subpixels);
-		cv::Mat resizedImg(res.width, res.height, CV_LOAD_IMAGE_GRAYSCALE);
-		cv::resize(img, resizedImg, res, 0, 0, CV_INTER_LINEAR);
+		cv::Mat resizedImg(res.width, res.height, cv::IMREAD_GRAYSCALE);
+		cv::resize(img, resizedImg, res, 0, 0, cv::INTER_LINEAR);
 
 		//compute weighted average
 		float total = 0;

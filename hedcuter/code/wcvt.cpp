@@ -16,13 +16,13 @@ void CVT::vor(cv::Mat &  img)
 {
 	//Generate virtual high resolution image
 	cv::Size res(img.size().width * subpixels, img.size().height * subpixels);
-	cv::Mat resizedImg(res.width, res.height, CV_LOAD_IMAGE_GRAYSCALE);
-	cv::resize(img, resizedImg, res, 0, 0, CV_INTER_LINEAR);
+	cv::Mat resizedImg(res.width, res.height, cv::IMREAD_GRAYSCALE);
+	cv::resize(img, resizedImg, res, 0, 0, cv::INTER_LINEAR);
 
 	cv::Mat dist(res, CV_32F, cv::Scalar::all(FLT_MAX));
 	cv::Mat root(res, CV_16U, cv::Scalar::all(USHRT_MAX));
 	cv::Mat visited(res, CV_8U, cv::Scalar::all(0));
-	
+
 
 	//init
 	std::vector< std::pair<float, cv::Point> > open;
@@ -50,7 +50,7 @@ void CVT::vor(cv::Mat &  img)
 		open.push_back(std::make_pair(d, pix));
 		c.coverage.clear();
 	}
-	
+
 	std::make_heap(open.begin(), open.end(), compareCell);
 
 	//propagate
@@ -102,7 +102,7 @@ void CVT::vor(cv::Mat &  img)
 			this->cells[rootid].coverage.push_back(cv::Point(x,y));
 		}//end y
 	}//end x
-	
+
 	//remove empty cells...
 	int cvt_size = this->cells.size();
 	for (int i = 0; i < cvt_size; i++)
@@ -138,7 +138,7 @@ void CVT::vor(cv::Mat &  img)
 
 void CVT::compute_weighted_cvt(cv::Mat &  img, std::vector<cv::Point2d> & sites)
 {
-	//inint 
+	//inint
 	int site_size = sites.size();
 	this->cells.resize(site_size);
 	for (int i = 0; i < site_size; i++)

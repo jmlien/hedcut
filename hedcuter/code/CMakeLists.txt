@@ -21,7 +21,7 @@ endif()
 #####################################################
 find_package(OpenGL REQUIRED)
 find_package(GLUT REQUIRED)
-find_package(OpenCV 3.0 REQUIRED)
+find_package(OpenCV 4.0 REQUIRED)
 
 include_directories(
         ${OPENGL_INCLUDE_DIRS}

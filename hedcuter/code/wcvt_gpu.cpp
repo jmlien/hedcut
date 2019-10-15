@@ -37,7 +37,7 @@ float getDepthValue(int x, int y)
 
 void CVT::compute_weighted_cvt_GPU(cv::Mat &  img, std::vector<cv::Point2d> & sites)
 {
-	//init 
+	//init
 	int site_size = sites.size();
 	cells.resize(site_size);
 	for (int i = 0; i < site_size; i++)
@@ -84,7 +84,7 @@ void CVT::vor_GPU()
 	glClearColor(0.0, 0.0, 0.0, 1.0);
 	glClearDepth(1.0f);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	
+
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
 	glOrtho(-1.0, 1.0, -1.0, 1.0, 1.0, -1.0);
@@ -110,16 +110,16 @@ void CVT::vor_GPU()
 		cv::Point pix(cells[i].site.x, cells[i].site.y);
 		root.at<ushort>(pix.x, pix.y) = i;
 		d = (256 - (float)grayscale.at<uchar>(pix.x, pix.y))*1.0f / 256;
-		
+
 		r = input_image.at<cv::Vec3b>(pix.x, pix.y)[2];
 		g = input_image.at<cv::Vec3b>(pix.x, pix.y)[1];
 		b = input_image.at<cv::Vec3b>(pix.x, pix.y)[0];
-		
+
 		red = (float)r / 255.0;
 		green = (float)g / 255.0;
 		blue = (float)b / 255.0;
 
-		
+
 		glPushMatrix();
 		//Convert opengl coordinates to opencv coordinates
 		glScalef(2.0 / (float)input_image.size().width, 2.0 / (float)input_image.size().height, 1.0);
@@ -143,10 +143,10 @@ void CVT::init_GPU(cv::Mat& img)
 	rotateY = 0.0;
 	translateZ = 0.0;
 	input_image = img;
-	cv::cvtColor(input_image, grayscale, CV_BGR2GRAY);
+	cv::cvtColor(input_image, grayscale, cv::COLOR_BGR2GRAY);
 	root = cv::Mat(img.size(), CV_16U, cv::Scalar::all(USHRT_MAX)).clone();
 
-	
+
 }
 void CVT::display_GPU(void)
 {
@@ -156,4 +156,3 @@ void CVT::display_GPU(void)
 	iteration++;
 	glutSwapBuffers();
 }
-

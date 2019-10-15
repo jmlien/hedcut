@@ -6,14 +6,14 @@ Hedcut::Hedcut()
 {
 	//control flags
 	disk_size = 1;        //if uniform_disk_size is true, all disks have radius=disk_size,
-	                      //othewise, the largest disks will have their radii=disk_size 
+	                      //othewise, the largest disks will have their radii=disk_size
 
 	uniform_disk_size = false; //true if all disks have the same size. disk_size is used when uniform_disk_size is true.
 	black_disk = false;        //true if all disks are black ONLY
 
 	//cvt control flags
 	cvt_iteration_limit = 100; //max number of iterations when building cvf
-	max_site_displacement = 1.01f; //max tolerable site displacement in each iteration. 
+	max_site_displacement = 1.01f; //max tolerable site displacement in each iteration.
 	average_termination = false;
 	gpu = false;
 	subpixels = 1;
@@ -26,7 +26,7 @@ Hedcut::Hedcut()
 bool Hedcut::build(cv::Mat & input_image, int n)
 {
 	cv::Mat grayscale;
-	cv::cvtColor(input_image, grayscale, CV_BGR2GRAY);
+	cv::cvtColor(input_image, grayscale, cv::COLOR_BGR2GRAY);
 
 	//sample n points
 	std::vector<cv::Point2d> pts;
@@ -34,7 +34,7 @@ bool Hedcut::build(cv::Mat & input_image, int n)
 
 	//initialize cvt
 	CVT cvt;
-	
+
 	cvt.iteration_limit = this->cvt_iteration_limit;
 	cvt.max_site_displacement = this->max_site_displacement;
 	cvt.average_termination = this->average_termination;
@@ -44,7 +44,7 @@ bool Hedcut::build(cv::Mat & input_image, int n)
 
 	clock_t startTime, endTime;
 	startTime = clock();
-	
+
 	//compute weighted centroidal voronoi tessellation
 	if (cvt.gpu)
 		cvt.compute_weighted_cvt_GPU(input_image, pts);
@@ -104,7 +104,7 @@ void Hedcut::sample_initial_points(cv::Mat & img, int n, std::vector<cv::Point2d
 void Hedcut::create_disks(cv::Mat & img, CVT & cvt)
 {
 	cv::Mat grayscale;
-	cv::cvtColor(img, grayscale, CV_BGR2GRAY);
+	cv::cvtColor(img, grayscale, cv::COLOR_BGR2GRAY);
 
 	disks.clear();
 
